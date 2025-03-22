@@ -1,0 +1,70 @@
+# applicaation.yml
+#配置了数据库连接信息，这是与数据库交互的基础，确定了连接的数据库类型、地址、用户名和密码等。
+# Tomcat
+server:
+    tomcat:
+        uri-encoding: UTF-8                  # 设置 URI 编码为 UTF-8，确保能够正确处理中文字符
+    port: 8080                               # 定义服务器端口号为 8080
+    servlet:
+        context-path: /springbootyf10w       # 指定 Servlet 的上下文路径为 /springbootyf10w
+
+
+# Spring 相关配置
+spring:
+    datasource:
+        driverClassName: com.mysql.jdbc.Driver             # 导入数据库驱动类名，这里使用的是 MySQL JDBC 驱动
+        url: jdbc:mysql://127.0.0.1:3306/itsource_27?useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true     # 数据库连接 URL，注意使用了 UTF-8 编码
+           #useUnicode=true: 确保 MySQL 使用 UTF-8 编码。
+           #characterEncoding=utf8: 指定使用 UTF-8 字符集，确保与数据库通信时字符编码一致。
+           #autoReconnect=true: 如果连接失败，则自动重试。
+           #useSSL=false: 关闭 SSL 安全连接以简化配置。
+           #serverTimezone=UTC: 设置服务器的时间时区为 UTC，保证一致性。
+           #createDatabaseIfNotExist=true: 创建数据库如果它不存在
+        username: root   #数据库用户名
+        password: 123456 #数据库密码
+
+
+    flyway:
+      baseline-on-migrate: true   # 每次迁移时都进行基准检查，默认为 false
+
+#        driverClassName: com.microsoft.sqlserver.jdbc.SQLServerDriver
+#        url: jdbc:sqlserver://127.0.0.1:1433;DatabaseName=springbootyf10w
+#        username: sa
+#        password: 123456
+  # Spring MVC 相关配置
+    servlet:
+      multipart:
+        max-file-size: 10MB      # 文件上传的最大文件大小为 10MB
+        max-request-size: 10MB   # 请求体的大小限制为 10MB
+    resources:
+      static-locations: classpath:static/,file:static/         # 静态资源的位置配置，支持从类路径和文件系统加载静态资源
+
+
+
+
+# MyBatis Plus 相关配置
+#mybatis
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml     # Mapper 位置映射，可以使用通配符查找所有的 XML 文件
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.entity                # 指定要扫描的实体类所在的包名，默认情况下会自动扫描其中定义的所有 XML 文件
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+    id-type: 1
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 2
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器
+    refresh-mapper: true           # 是否在数据库字段名前添加下划线
+    #逻辑删除配置
+    logic-delete-value: -1
+    logic-not-delete-value: 0       # 设置未删除的逻辑状态值 (例如使用 0 表示未删除)
+    #自定义SQL注入器
+    sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+  configuration:
+    map-underscore-to-camel-case: true           # 将下划线命名转换为驼峰式命名
+    cache-enabled: false                         # 关闭 MyBatis 的缓存功能
+    call-setters-on-nulls: true                 # 当参数设置为 null 时，调用 setter 方法
+    #springboot 项目mybatis plus 设置 jdbcTypeForNull (oracle数据库需配置JdbcType.NULL, 默认是Other)
+    jdbc-type-for-null: 'null' 
